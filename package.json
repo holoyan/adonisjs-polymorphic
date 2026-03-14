@@ -1,0 +1,53 @@
+{
+  "name": "adonisjs-polymorphic",
+  "version": "0.1.0",
+  "description": "Polymorphic relations (morphOne, morphMany, morphTo) for AdonisJS Lucid ORM",
+  "type": "module",
+  "main": "./build/src/index.js",
+  "types": "./build/src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./build/src/index.js",
+      "types": "./build/src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --import=ts-node-maintained/register/esm bin/test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "adonisjs",
+    "lucid",
+    "polymorphic",
+    "polymorphic-relations",
+    "morph",
+    "morphOne",
+    "morphMany",
+    "morphTo",
+    "orm",
+    "adonis"
+  ],
+  "files": [
+    "build/src"
+  ],
+  "peerDependencies": {
+    "@adonisjs/lucid": ">=21.0.0"
+  },
+  "devDependencies": {
+    "@adonisjs/lucid": "^21.6.0",
+    "@japa/assert": "^4.0.1",
+    "@japa/runner": "^4.2.0",
+    "@types/node": "^22.0.0",
+    "pg": "^8.0.0",
+    "ts-node-maintained": "^10.9.5",
+    "typescript": "~5.8"
+  },
+  "dependencies": {
+    "@poppinss/utils": "^7.0.1",
+    "knex": "^3.1.0",
+    "luxon": "^3.7.2",
+    "reflect-metadata": "^0.2.2"
+  }
+}

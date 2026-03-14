@@ -1,0 +1,19 @@
+# Source (only build/src is published via "files" in package.json)
+src/
+tests/
+bin/
+
+# Config
+tsconfig.json
+.env
+.env.*
+.env.example
+
+# Dev tools
+.claude/
+.idea/
+.vscode/
+
+# Misc
+*.log
+.DS_Store
