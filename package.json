@@ -68,6 +68,9 @@
     "ts-node-maintained": "^10.9.5",
     "typescript": "~5.8"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@holoyan/morph-map-js": "^0.1.2",
     "@poppinss/utils": "^7.0.1",
