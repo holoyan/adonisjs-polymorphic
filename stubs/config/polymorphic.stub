@@ -1,0 +1,19 @@
+{{{
+  exports({ to: app.configPath('polymorphic.ts') })
+}}}
+import { defineConfig } from 'adonisjs-polymorphic'
+
+export default defineConfig({
+  /**
+   * List every model decorated with @MorphMap here.
+   * The service provider imports them at boot time so the global
+   * registry is populated before any query runs.
+   *
+   * Example:
+   *   morphModels: [
+   *     () => import('#models/post'),
+   *     () => import('#models/video'),
+   *   ],
+   */
+  morphModels: [],
+})

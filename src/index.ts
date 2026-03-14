@@ -6,6 +6,8 @@
  */
 
 export { morphOne, morphMany, morphTo } from './decorators.js'
+export { defineConfig } from './define_config.js'
+export type { PolymorphicConfig } from './define_config.js'
 export { MorphOne } from './relations/morph_one/index.js'
 export { MorphMany } from './relations/morph_many/index.js'
 export { MorphTo } from './relations/morph_to/index.js'
