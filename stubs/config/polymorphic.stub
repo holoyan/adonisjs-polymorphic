@@ -1,7 +1,7 @@
 {{{
   exports({ to: app.configPath('polymorphic.ts') })
 }}}
-import { defineConfig } from 'adonisjs-polymorphic'
+import { defineConfig } from '@holoyan/adonisjs-polymorphic'
 
 export default defineConfig({
   /**

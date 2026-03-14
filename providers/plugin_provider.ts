@@ -2,7 +2,7 @@ import type { ApplicationService } from '@adonisjs/core/types'
 import type { PolymorphicConfig } from '../src/define_config.js'
 
 /**
- * Service provider for adonisjs-polymorphic.
+ * Service provider for @holoyan/adonisjs-polymorphic.
  *
  * During boot, imports every model listed in config/polymorphic.ts so that
  * @MorphMap decorators run and the global registry is fully populated before

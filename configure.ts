@@ -3,7 +3,7 @@ import { stubsRoot } from './stubs/main.js'
 
 /**
  * Configure hook — runs when the user executes:
- *   node ace configure adonisjs-polymorphic
+ *   node ace configure @holoyan/adonisjs-polymorphic
  *
  * - Registers the service provider in adonisrc.ts
  * - Publishes config/polymorphic.ts
@@ -12,7 +12,7 @@ export async function configure(command: Configure) {
   const codemods = await command.createCodemods()
 
   await codemods.updateRcFile((rcFile) => {
-    rcFile.addProvider('adonisjs-polymorphic/provider')
+    rcFile.addProvider('@holoyan/adonisjs-polymorphic/provider')
   })
 
   await codemods.makeUsingStub(stubsRoot, 'config/polymorphic.stub', {})

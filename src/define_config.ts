@@ -14,7 +14,7 @@ export interface PolymorphicConfig {
 }
 
 /**
- * Define the configuration for adonisjs-polymorphic.
+ * Define the configuration for @holoyan/adonisjs-polymorphic.
  * Use this in config/polymorphic.ts.
  */
 export function defineConfig(config: PolymorphicConfig): PolymorphicConfig {

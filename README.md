@@ -1,4 +1,4 @@
-# adonisjs-polymorphic
+# @holoyan/adonisjs-polymorphic
 
 Polymorphic relations for [AdonisJS Lucid ORM](https://lucid.adonisjs.com) — `morphOne`, `morphMany`, and `morphTo`.
 
@@ -36,13 +36,13 @@ It's simple — just star this repository. That is enough to keep me motivated t
 ## Installation
 
 ```bash
-npm install adonisjs-polymorphic
+npm install @holoyan/adonisjs-polymorphic
 ```
 
 Register the service provider by running the configure command:
 
 ```bash
-node ace configure adonisjs-polymorphic
+node ace configure @holoyan/adonisjs-polymorphic
 ```
 
 This automatically adds the provider to your `adonisrc.ts`.
@@ -86,7 +86,7 @@ await schema.createTable('images', (table) => {
 ```ts
 // app/models/image.ts
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-import { morphTo } from 'adonisjs-polymorphic'
+import { morphTo } from '@holoyan/adonisjs-polymorphic'
 import Post from '#models/post'
 import Video from '#models/video'
 
@@ -111,7 +111,7 @@ export default class Image extends BaseModel {
 ```ts
 // app/models/post.ts
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-import { morphOne } from 'adonisjs-polymorphic'
+import { morphOne } from '@holoyan/adonisjs-polymorphic'
 import Image from '#models/image'
 
 export default class Post extends BaseModel {
@@ -129,7 +129,7 @@ export default class Post extends BaseModel {
 ```ts
 // app/models/video.ts
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-import { morphOne } from 'adonisjs-polymorphic'
+import { morphOne } from '@holoyan/adonisjs-polymorphic'
 import Image from '#models/image'
 
 export default class Video extends BaseModel {
@@ -235,7 +235,7 @@ await schema.createTable('comments', (table) => {
 ```ts
 // app/models/comment.ts
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-import { morphTo } from 'adonisjs-polymorphic'
+import { morphTo } from '@holoyan/adonisjs-polymorphic'
 import Post from '#models/post'
 import Video from '#models/video'
 
@@ -259,7 +259,7 @@ export default class Comment extends BaseModel {
 
 ```ts
 // app/models/post.ts
-import { morphOne, morphMany } from 'adonisjs-polymorphic'
+import { morphOne, morphMany } from '@holoyan/adonisjs-polymorphic'
 import Image from '#models/image'
 import Comment from '#models/comment'
 
@@ -437,7 +437,7 @@ Now `morphTo` relations can omit the `morphMap` option entirely:
 
 ```ts
 // app/models/comment.ts
-import { morphTo } from 'adonisjs-polymorphic'
+import { morphTo } from '@holoyan/adonisjs-polymorphic'
 
 export default class Comment extends BaseModel {
   @column()
@@ -483,7 +483,7 @@ The global registry is populated when a model file is **imported**. To guarantee
 
 ```ts
 // config/polymorphic.ts
-import { defineConfig } from 'adonisjs-polymorphic'
+import { defineConfig } from '@holoyan/adonisjs-polymorphic'
 
 export default defineConfig({
   morphModels: [
