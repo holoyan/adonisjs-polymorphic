@@ -1,5 +1,6 @@
 import type { MorphOneOptions } from '../../types.js'
 import { MorphOneQueryClient } from './query_client.js'
+import { getRegistry } from '../morph_to/registry.js'
 
 /**
  * MorphOne relation - the parent model has exactly one polymorphic child.
@@ -91,8 +92,15 @@ export class MorphOne {
     this.localKey = localKeyAttr
     this.localKeyColumnName = localColDef.columnName
 
-    // The value stored in the type column (defaults to parent table name)
-    this.morphValue = this.options.morphValue ?? this.model.table
+    // The value stored in the type column.
+    // Priority: explicit option → @MorphMap alias → model table name
+    if (this.options.morphValue) {
+      this.morphValue = this.options.morphValue
+    } else {
+      const registry = getRegistry()
+      const alias = registry?.hasTarget(this.model) ? registry.getAlias(this.model) : null
+      this.morphValue = alias ?? this.model.table
+    }
 
     this.booted = true
   }

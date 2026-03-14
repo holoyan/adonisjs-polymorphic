@@ -1,6 +1,7 @@
 import type { MorphToOptions } from '../../types.js'
 import { MorphToEagerLoader } from './eager_loader.js'
 import { MorphToQueryClient } from './query_client.js'
+import { getRegistry } from './registry.js'
 
 /**
  * MorphTo relation - the child model belongs to one of many possible parent types.
@@ -19,8 +20,8 @@ export class MorphTo {
 
   onQueryHook: ((query: any) => void) | undefined
 
-  /** Map of morph type strings to model factories */
-  morphMap: Record<string, () => any>
+  /** Explicit morph map (optional when global registry is used) */
+  morphMap: Record<string, () => any> | undefined
 
   /** Attribute name for the type column on THIS (child) model */
   morphTypeKey!: string
@@ -89,20 +90,44 @@ export class MorphTo {
     this.morphIdColumnName = idColDef.columnName
 
     // Build the reverse map for associate(): ModelClass -> type string
-    for (const [morphType, factory] of Object.entries(this.morphMap)) {
-      const ModelClass = factory()
-      this.reverseMorphMap.set(ModelClass, morphType)
+    if (this.morphMap) {
+      for (const [morphType, factory] of Object.entries(this.morphMap)) {
+        const ModelClass = factory()
+        this.reverseMorphMap.set(ModelClass, morphType)
+      }
     }
 
     this.booted = true
   }
 
   /**
+   * Resolves the model factory for a given morph type string.
+   * Checks the explicit morphMap first, then falls back to the global registry.
+   */
+  resolveModelFactory(morphType: string): (() => any) | undefined {
+    if (this.morphMap?.[morphType]) {
+      return this.morphMap[morphType]
+    }
+    const registry = getRegistry()
+    if (registry?.has(morphType)) {
+      return () => registry.get(morphType)
+    }
+    return undefined
+  }
+
+  /**
    * Looks up the morph type string for a given model class.
+   * Checks the explicit reverse map first, then falls back to the global registry.
    * Used by MorphToQueryClient.associate().
    */
   getMorphTypeFor(ModelClass: any): string | undefined {
-    return this.reverseMorphMap.get(ModelClass)
+    const fromMap = this.reverseMorphMap.get(ModelClass)
+    if (fromMap) return fromMap
+    try {
+      return getRegistry()?.getAlias(ModelClass)
+    } catch {
+      return undefined
+    }
   }
 
   setRelated(parent: any, related: any): void {

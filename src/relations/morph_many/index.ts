@@ -1,5 +1,6 @@
 import type { MorphManyOptions } from '../../types.js'
 import { MorphManyQueryClient } from './query_client.js'
+import { getRegistry } from '../morph_to/registry.js'
 
 /**
  * MorphMany relation - the parent model has many polymorphic children.
@@ -76,7 +77,14 @@ export class MorphMany {
     this.localKey = localKeyAttr
     this.localKeyColumnName = localColDef.columnName
 
-    this.morphValue = this.options.morphValue ?? this.model.table
+    // Priority: explicit option → @MorphMap alias → model table name
+    if (this.options.morphValue) {
+      this.morphValue = this.options.morphValue
+    } else {
+      const registry = getRegistry()
+      const alias = registry?.hasTarget(this.model) ? registry.getAlias(this.model) : null
+      this.morphValue = alias ?? this.model.table
+    }
 
     this.booted = true
   }

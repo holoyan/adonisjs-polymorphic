@@ -160,4 +160,36 @@ test.group('MorphOne', (group) => {
     assert.equal(image.imageableId, post.id)
     assert.isTrue(image.$isPersisted)
   })
+
+  test('finds or creates a related image via related().firstOrCreate()', async ({ assert }) => {
+    const post = await Post.create({ title: 'Hello' })
+
+    const created = await (post as any).related('image').firstOrCreate({ url: 'first.jpg' }) as Image
+    assert.equal(created.url, 'first.jpg')
+    assert.equal(created.imageableType, 'posts')
+    assert.isTrue(created.$isPersisted)
+
+    // calling again returns the existing row, does not create a duplicate
+    const found = await (post as any).related('image').firstOrCreate({ url: 'first.jpg' }) as Image
+    assert.equal(found.id, created.id)
+    assert.equal(await Image.query().count('* as total').then((r: any) => r[0].$extras.total), 1)
+  })
+
+  test('updates or creates a related image via related().updateOrCreate()', async ({ assert }) => {
+    const post = await Post.create({ title: 'Hello' })
+
+    // No existing row — creates
+    const image = await (post as any)
+      .related('image')
+      .updateOrCreate({ imageableId: post.id }, { url: 'original.jpg' }) as Image
+    assert.equal(image.url, 'original.jpg')
+
+    // Existing row — updates
+    await (post as any)
+      .related('image')
+      .updateOrCreate({ imageableId: post.id }, { url: 'updated.jpg' })
+
+    const refreshed = await Image.findOrFail(image.id)
+    assert.equal(refreshed.url, 'updated.jpg')
+  })
 })

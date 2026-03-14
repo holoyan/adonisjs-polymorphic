@@ -51,8 +51,12 @@ export interface MorphToOptions {
   /**
    * Maps morph type string values to model factories.
    * Example: { posts: () => Post, videos: () => Video }
+   *
+   * Optional when @holoyan/morph-map-js is installed and models are
+   * decorated with @MorphMap('posts') — the global registry is used
+   * as a fallback at query time.
    */
-  morphMap: Record<string, () => any>
+  morphMap?: Record<string, () => any>
 
   /**
    * The morph name prefix used to derive type and id attribute names on THIS model.

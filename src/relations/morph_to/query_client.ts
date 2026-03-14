@@ -27,11 +27,11 @@ export class MorphToQueryClient {
       )
     }
 
-    const modelFactory = this.relation.morphMap[morphType]
+    const modelFactory = this.relation.resolveModelFactory(morphType)
     if (!modelFactory) {
       throw new Error(
         `[MorphTo] Unknown morph type "${morphType}" for relation "${this.relation.relationName}". ` +
-          `Check your morphMap configuration.`
+          `Add it to the morphMap option or decorate the model with @MorphMap('${morphType}').`
       )
     }
 

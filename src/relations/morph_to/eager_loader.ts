@@ -52,7 +52,7 @@ export class MorphToEagerLoader {
     const allResults: any[] = []
 
     for (const [morphType, parentGroup] of groups) {
-      const modelFactory = this.relation.morphMap[morphType]
+      const modelFactory = this.relation.resolveModelFactory(morphType)
       if (!modelFactory) {
         // Unknown type - skip silently (will result in null on the parent)
         continue

@@ -175,4 +175,21 @@ test.group('MorphMany', (group) => {
     assert.equal(comment.commentableId, post.id)
     assert.isTrue(comment.$isPersisted)
   })
+
+  test('saves multiple existing comments via related().saveMany()', async ({ assert }) => {
+    const post = await Post.create({ title: 'Hello' })
+
+    const c1 = new Comment()
+    c1.body = 'First'
+    const c2 = new Comment()
+    c2.body = 'Second'
+
+    await (post as any).related('comments').saveMany([c1, c2])
+
+    for (const c of [c1, c2]) {
+      assert.equal(c.commentableType, 'posts')
+      assert.equal(c.commentableId, post.id)
+      assert.isTrue(c.$isPersisted)
+    }
+  })
 })
