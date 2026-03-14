@@ -2,6 +2,23 @@
 
 Polymorphic relations for [AdonisJS Lucid ORM](https://lucid.adonisjs.com) — `morphOne`, `morphMany`, and `morphTo`.
 
+| Package version | AdonisJS version |
+|---|---|
+| v0.x | v6 + v7 |
+
+---
+
+## How can you support me?
+
+It's simple — just star this repository. That is enough to keep me motivated to maintain this package.
+
+---
+
+## Related packages
+
+- [@holoyan/adonisjs-permissions](https://github.com/holoyan/adonisjs-permissions) — Role & permission system for AdonisJS. Supports multi-model ACL, resource-level permissions, scopes (multi-tenancy), and events.
+- [@holoyan/morph-map-js](https://github.com/holoyan/morph-map-js) — The framework-agnostic morph map registry that powers the `@MorphMap` decorator used by this package.
+
 ---
 
 ## Table of Contents
