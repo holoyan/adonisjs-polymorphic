@@ -9,10 +9,23 @@
     ".": {
       "import": "./build/src/index.js",
       "types": "./build/src/index.d.ts"
+    },
+    "./provider": {
+      "import": "./build/providers/plugin_provider.js",
+      "types": "./build/providers/plugin_provider.d.ts"
+    },
+    "./configure": {
+      "import": "./build/configure.js",
+      "types": "./build/configure.d.ts"
+    },
+    "./stubs": {
+      "import": "./build/stubs/main.js",
+      "types": "./build/stubs/main.d.ts"
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run copy:stubs",
+    "copy:stubs": "copyfiles \"stubs/**/*.stub\" build",
     "dev": "tsc --watch",
     "test": "node --import=ts-node-maintained/register/esm bin/test.ts",
     "typecheck": "tsc --noEmit"
@@ -30,16 +43,27 @@
     "adonis"
   ],
   "files": [
-    "build/src"
+    "build",
+    "!build/bin",
+    "!build/tests"
   ],
   "peerDependencies": {
+    "@adonisjs/core": ">=6.0.0",
     "@adonisjs/lucid": ">=21.0.0"
   },
+  "peerDependenciesMeta": {
+    "@adonisjs/core": {
+      "optional": false
+    }
+  },
   "devDependencies": {
+    "@adonisjs/assembler": "^7.8.2",
+    "@adonisjs/core": "^6.20.0",
     "@adonisjs/lucid": "^21.6.0",
     "@japa/assert": "^4.0.1",
     "@japa/runner": "^4.2.0",
     "@types/node": "^22.0.0",
+    "copyfiles": "^2.4.1",
     "pg": "^8.0.0",
     "ts-node-maintained": "^10.9.5",
     "typescript": "~5.8"

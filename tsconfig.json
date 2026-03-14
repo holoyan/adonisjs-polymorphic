@@ -19,6 +19,6 @@
     "noUnusedParameters": false,
     "strictNullChecks": true
   },
-  "include": ["src/**/*", "tests/**/*", "bin/**/*"],
+  "include": ["src/**/*", "tests/**/*", "bin/**/*", "providers/**/*", "stubs/**/*", "configure.ts"],
   "exclude": ["build", "node_modules"]
 }
