@@ -59,9 +59,9 @@ test.group('MorphTo', (group) => {
       commentableId: post.id,
     })
 
-    const found = await (Comment.query() as any)
+    const found = await Comment.query()
       .where('id', comment.id)
-      .preload('commentable')
+      .preload('commentable' as any)
       .firstOrFail() as Comment
 
     assert.instanceOf(found.commentable, Post)
@@ -76,9 +76,9 @@ test.group('MorphTo', (group) => {
       commentableId: video.id,
     })
 
-    const found = await (Comment.query() as any)
+    const found = await Comment.query()
       .where('id', comment.id)
-      .preload('commentable')
+      .preload('commentable' as any)
       .firstOrFail() as Comment
 
     assert.instanceOf(found.commentable, Video)
@@ -96,9 +96,9 @@ test.group('MorphTo', (group) => {
       { body: 'On Video', commentableType: 'videos', commentableId: video.id },
     ])
 
-    const comments = await (Comment.query() as any)
+    const comments = await Comment.query()
       .whereIn('id', [c1.id, c2.id])
-      .preload('commentable') as Comment[]
+      .preload('commentable' as any) as Comment[]
 
     const postComment = comments.find((c) => c.body === 'On Post')!
     const videoComment = comments.find((c) => c.body === 'On Video')!
@@ -117,9 +117,9 @@ test.group('MorphTo', (group) => {
       { body: 'Second', commentableType: 'posts', commentableId: post.id },
     ])
 
-    const comments = await (Comment.query() as any)
+    const comments = await Comment.query()
       .whereIn('id', [c1.id, c2.id])
-      .preload('commentable') as Comment[]
+      .preload('commentable' as any) as Comment[]
 
     for (const c of comments) {
       assert.instanceOf(c.commentable, Post)
@@ -137,7 +137,7 @@ test.group('MorphTo', (group) => {
       commentableId: post.id,
     })
 
-    const found = await (comment as any).related('commentable').query().firstOrFail() as Post
+    const found = await comment.related('commentable' as any).query().firstOrFail() as Post
 
     assert.instanceOf(found, Post)
     assert.equal(found.title, 'My Post')
@@ -151,7 +151,7 @@ test.group('MorphTo', (group) => {
       commentableId: video.id,
     })
 
-    const found = await (comment as any).related('commentable').query().firstOrFail() as Video
+    const found = await comment.related('commentable' as any).query().firstOrFail() as Video
 
     assert.instanceOf(found, Video)
     assert.equal(found.title, 'My Video')
@@ -168,7 +168,7 @@ test.group('MorphTo', (group) => {
       commentableId: post1.id,
     })
 
-    await (comment as any).related('commentable').associate(post2)
+    await comment.related('commentable' as any).associate(post2)
 
     const refreshed = await Comment.findOrFail(comment.id)
     assert.equal(refreshed.commentableType, 'posts')
@@ -183,7 +183,7 @@ test.group('MorphTo', (group) => {
       commentableId: post.id,
     })
 
-    await (comment as any).related('commentable').dissociate()
+    await comment.related('commentable' as any).dissociate()
 
     const refreshed = await Comment.findOrFail(comment.id)
     assert.isNull(refreshed.commentableType)
@@ -200,9 +200,9 @@ test.group('MorphTo', (group) => {
       imageableId: post.id,
     })
 
-    const found = await (Image.query() as any)
+    const found = await Image.query()
       .where('id', image.id)
-      .preload('imageable')
+      .preload('imageable' as any)
       .firstOrFail() as Image
 
     assert.instanceOf(found.imageable, Post)
@@ -217,9 +217,9 @@ test.group('MorphTo', (group) => {
       imageableId: video.id,
     })
 
-    const found = await (Image.query() as any)
+    const found = await Image.query()
       .where('id', image.id)
-      .preload('imageable')
+      .preload('imageable' as any)
       .firstOrFail() as Image
 
     assert.instanceOf(found.imageable, Video)

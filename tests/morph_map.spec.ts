@@ -117,9 +117,9 @@ test.group('MorphMap registry integration', (group) => {
       reactableId: article.id,
     })
 
-    const found = await (Reaction.query() as any)
+    const found = await Reaction.query()
       .where('id', reaction.id)
-      .preload('reactable')
+      .preload('reactable' as any)
       .firstOrFail() as Reaction
 
     assert.instanceOf(found.reactable, Article)
@@ -134,9 +134,9 @@ test.group('MorphMap registry integration', (group) => {
       reactableId: clip.id,
     })
 
-    const found = await (Reaction.query() as any)
+    const found = await Reaction.query()
       .where('id', reaction.id)
-      .preload('reactable')
+      .preload('reactable' as any)
       .firstOrFail() as Reaction
 
     assert.instanceOf(found.reactable, Clip)
@@ -152,9 +152,9 @@ test.group('MorphMap registry integration', (group) => {
       { emoji: '❤️', reactableType: 'clip', reactableId: clip.id },
     ])
 
-    const reactions = await (Reaction.query() as any)
+    const reactions = await Reaction.query()
       .whereIn('id', [r1.id, r2.id])
-      .preload('reactable') as Reaction[]
+      .preload('reactable' as any) as Reaction[]
 
     const articleReaction = reactions.find((r) => r.emoji === '👍')!
     const clipReaction = reactions.find((r) => r.emoji === '❤️')!
@@ -171,7 +171,7 @@ test.group('MorphMap registry integration', (group) => {
       reactableId: article.id,
     })
 
-    const found = await (reaction as any).related('reactable').query().firstOrFail() as Article
+    const found = await reaction.related('reactable' as any).query().firstOrFail() as Article
 
     assert.instanceOf(found, Article)
     assert.equal(found.title, 'Query Me')
@@ -186,7 +186,7 @@ test.group('MorphMap registry integration', (group) => {
     })
 
     const newArticle = await Article.create({ title: 'New Target' })
-    await (reaction as any).related('reactable').associate(newArticle)
+    await reaction.related('reactable' as any).associate(newArticle)
 
     const refreshed = await Reaction.findOrFail(reaction.id)
     assert.equal(refreshed.reactableType, 'article')
@@ -198,7 +198,7 @@ test.group('MorphMap registry integration', (group) => {
   test('morphOne: stores @MorphMap alias in type column (not table name)', async ({ assert }) => {
     // Article alias is 'article', table is 'articles' — they differ intentionally
     const article = await Article.create({ title: 'Test' })
-    const reaction = await (article as any).related('reaction').create({ emoji: '👍' }) as Reaction
+    const reaction = await article.related('reaction' as any).create({ emoji: '👍' }) as Reaction
 
     // The type column must contain the alias 'article', NOT the table name 'articles'
     assert.equal(reaction.reactableType, 'article')
@@ -207,7 +207,7 @@ test.group('MorphMap registry integration', (group) => {
 
   test('morphMany: stores @MorphMap alias in type column', async ({ assert }) => {
     const clip = await Clip.create({ title: 'Test' })
-    const reaction = await (clip as any).related('reactions').create({ emoji: '❤️' }) as Reaction
+    const reaction = await clip.related('reactions' as any).create({ emoji: '❤️' }) as Reaction
 
     assert.equal(reaction.reactableType, 'clip')
     assert.equal(reaction.reactableId, clip.id)
@@ -217,9 +217,9 @@ test.group('MorphMap registry integration', (group) => {
     const article = await Article.create({ title: 'Full E2E' })
     await Reaction.create({ emoji: '🎉', reactableType: 'article', reactableId: article.id })
 
-    const found = await (Article.query() as any)
+    const found = await Article.query()
       .where('id', article.id)
-      .preload('reaction')
+      .preload('reaction' as any)
       .firstOrFail() as Article
 
     assert.instanceOf(found.reaction, Reaction)

@@ -50,9 +50,9 @@ test.group('MorphMany', (group) => {
       { body: 'Second', commentableType: 'posts', commentableId: post.id },
     ])
 
-    const found = await (Post.query() as any)
+    const found = await Post.query()
       .where('id', post.id)
-      .preload('comments')
+      .preload('comments' as any)
       .firstOrFail() as Post
 
     assert.lengthOf(found.comments, 2)
@@ -62,9 +62,9 @@ test.group('MorphMany', (group) => {
   test('returns empty array when post has no comments', async ({ assert }) => {
     const post = await Post.create({ title: 'Silent' })
 
-    const found = await (Post.query() as any)
+    const found = await Post.query()
       .where('id', post.id)
-      .preload('comments')
+      .preload('comments' as any)
       .firstOrFail() as Post
 
     assert.isArray(found.comments)
@@ -78,8 +78,8 @@ test.group('MorphMany', (group) => {
     await Comment.create({ body: 'Post comment', commentableType: 'posts', commentableId: post.id })
     await Comment.create({ body: 'Video comment', commentableType: 'videos', commentableId: video.id })
 
-    const foundPost = await (Post.query() as any).where('id', post.id).preload('comments').firstOrFail() as Post
-    const foundVideo = await (Video.query() as any).where('id', video.id).preload('comments').firstOrFail() as Video
+    const foundPost = await Post.query().where('id', post.id).preload('comments' as any).firstOrFail() as Post
+    const foundVideo = await Video.query().where('id', video.id).preload('comments' as any).firstOrFail() as Video
 
     assert.lengthOf(foundPost.comments, 1)
     assert.equal(foundPost.comments[0].body, 'Post comment')
@@ -101,7 +101,7 @@ test.group('MorphMany', (group) => {
       { body: 'C', commentableType: 'posts', commentableId: p2.id },
     ])
 
-    const posts = await (Post.query() as any).orderBy('id').preload('comments') as Post[]
+    const posts = await Post.query().orderBy('id').preload('comments' as any) as Post[]
 
     const first = posts.find((p) => p.id === p1.id)!
     const second = posts.find((p) => p.id === p2.id)!
@@ -119,7 +119,7 @@ test.group('MorphMany', (group) => {
       { body: 'Y', commentableType: 'posts', commentableId: post.id },
     ])
 
-    const comments = await (post as any).related('comments').query().orderBy('body') as Comment[]
+    const comments = await post.related('comments' as any).query().orderBy('body') as Comment[]
 
     assert.lengthOf(comments, 2)
     assert.equal(comments[0].body, 'X')
@@ -133,7 +133,7 @@ test.group('MorphMany', (group) => {
       { body: 'Skip', commentableType: 'posts', commentableId: post.id },
     ])
 
-    const comments = await (post as any).related('comments').query().where('body', 'Keep') as Comment[]
+    const comments = await post.related('comments' as any).query().where('body', 'Keep') as Comment[]
 
     assert.lengthOf(comments, 1)
     assert.equal(comments[0].body, 'Keep')
@@ -143,7 +143,7 @@ test.group('MorphMany', (group) => {
 
   test('creates a comment via related().create()', async ({ assert }) => {
     const post = await Post.create({ title: 'Hello' })
-    const comment = await (post as any).related('comments').create({ body: 'Created!' }) as Comment
+    const comment = await post.related('comments' as any).create({ body: 'Created!' }) as Comment
 
     assert.instanceOf(comment, Comment)
     assert.equal(comment.commentableType, 'posts')
@@ -153,8 +153,7 @@ test.group('MorphMany', (group) => {
 
   test('creates multiple comments via related().createMany()', async ({ assert }) => {
     const post = await Post.create({ title: 'Hello' })
-    const comments = await (post as any)
-      .related('comments')
+    const comments = await post.related('comments' as any)
       .createMany([{ body: 'One' }, { body: 'Two' }]) as Comment[]
 
     assert.lengthOf(comments, 2)
@@ -169,7 +168,7 @@ test.group('MorphMany', (group) => {
     const comment = new Comment()
     comment.body = 'Saved!'
 
-    await (post as any).related('comments').save(comment)
+    await post.related('comments' as any).save(comment)
 
     assert.equal(comment.commentableType, 'posts')
     assert.equal(comment.commentableId, post.id)
@@ -184,7 +183,7 @@ test.group('MorphMany', (group) => {
     const c2 = new Comment()
     c2.body = 'Second'
 
-    await (post as any).related('comments').saveMany([c1, c2])
+    await post.related('comments' as any).saveMany([c1, c2])
 
     for (const c of [c1, c2]) {
       assert.equal(c.commentableType, 'posts')

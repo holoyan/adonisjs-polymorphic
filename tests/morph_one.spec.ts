@@ -47,9 +47,9 @@ test.group('MorphOne', (group) => {
     const post = await Post.create({ title: 'Hello' })
     await Image.create({ url: 'a.jpg', imageableType: 'posts', imageableId: post.id })
 
-    const found = await (Post.query() as any)
+    const found = await Post.query()
       .where('id', post.id)
-      .preload('image')
+      .preload('image' as any)
       .firstOrFail() as Post
 
     assert.instanceOf(found.image, Image)
@@ -59,9 +59,9 @@ test.group('MorphOne', (group) => {
   test('returns null when post has no image', async ({ assert }) => {
     const post = await Post.create({ title: 'Empty' })
 
-    const found = await (Post.query() as any)
+    const found = await Post.query()
       .where('id', post.id)
-      .preload('image')
+      .preload('image' as any)
       .firstOrFail() as Post
 
     assert.isNull(found.image)
@@ -71,9 +71,9 @@ test.group('MorphOne', (group) => {
     const video = await Video.create({ title: 'My Video' })
     await Image.create({ url: 'v.jpg', imageableType: 'videos', imageableId: video.id })
 
-    const found = await (Video.query() as any)
+    const found = await Video.query()
       .where('id', video.id)
-      .preload('image')
+      .preload('image' as any)
       .firstOrFail() as Video
 
     assert.instanceOf(found.image, Image)
@@ -89,8 +89,8 @@ test.group('MorphOne', (group) => {
     await Image.create({ url: 'post-image.jpg', imageableType: 'posts', imageableId: post.id })
     await Image.create({ url: 'video-image.jpg', imageableType: 'videos', imageableId: video.id })
 
-    const foundPost = await (Post.query() as any).where('id', post.id).preload('image').firstOrFail() as Post
-    const foundVideo = await (Video.query() as any).where('id', video.id).preload('image').firstOrFail() as Video
+    const foundPost = await Post.query().where('id', post.id).preload('image' as any).firstOrFail() as Post
+    const foundVideo = await Video.query().where('id', video.id).preload('image' as any).firstOrFail() as Video
 
     assert.equal(foundPost.image!.url, 'post-image.jpg')
     assert.equal(foundVideo.image!.url, 'video-image.jpg')
@@ -108,7 +108,7 @@ test.group('MorphOne', (group) => {
       Image.create({ url: 'img2.jpg', imageableType: 'posts', imageableId: p2.id }),
     ])
 
-    const posts = await (Post.query() as any).orderBy('id').preload('image') as Post[]
+    const posts = await Post.query().orderBy('id').preload('image' as any) as Post[]
 
     assert.equal(posts[0].image!.url, 'img1.jpg')
     assert.equal(posts[1].image!.url, 'img2.jpg')
@@ -119,7 +119,7 @@ test.group('MorphOne', (group) => {
     await Post.create({ title: 'Post without image' })
     await Image.create({ url: 'img.jpg', imageableType: 'posts', imageableId: p1.id })
 
-    const posts = await (Post.query() as any).orderBy('id').preload('image') as Post[]
+    const posts = await Post.query().orderBy('id').preload('image' as any) as Post[]
 
     assert.instanceOf(posts[0].image, Image)
     assert.isNull(posts[1].image)
@@ -131,7 +131,7 @@ test.group('MorphOne', (group) => {
     const post = await Post.create({ title: 'Hello' })
     await Image.create({ url: 'a.jpg', imageableType: 'posts', imageableId: post.id })
 
-    const image = await (post as any).related('image').query().first() as Image
+    const image = await post.related('image' as any).query().first() as Image
 
     assert.instanceOf(image, Image)
     assert.equal(image.url, 'a.jpg')
@@ -141,7 +141,7 @@ test.group('MorphOne', (group) => {
 
   test('creates a related image via related().create()', async ({ assert }) => {
     const post = await Post.create({ title: 'Hello' })
-    const image = await (post as any).related('image').create({ url: 'new.jpg' }) as Image
+    const image = await post.related('image' as any).create({ url: 'new.jpg' }) as Image
 
     assert.instanceOf(image, Image)
     assert.equal(image.url, 'new.jpg')
@@ -154,7 +154,7 @@ test.group('MorphOne', (group) => {
     const image = new Image()
     image.url = 'saved.jpg'
 
-    await (post as any).related('image').save(image)
+    await post.related('image' as any).save(image)
 
     assert.equal(image.imageableType, 'posts')
     assert.equal(image.imageableId, post.id)
@@ -164,13 +164,13 @@ test.group('MorphOne', (group) => {
   test('finds or creates a related image via related().firstOrCreate()', async ({ assert }) => {
     const post = await Post.create({ title: 'Hello' })
 
-    const created = await (post as any).related('image').firstOrCreate({ url: 'first.jpg' }) as Image
+    const created = await post.related('image' as any).firstOrCreate({ url: 'first.jpg' }) as Image
     assert.equal(created.url, 'first.jpg')
     assert.equal(created.imageableType, 'posts')
     assert.isTrue(created.$isPersisted)
 
     // calling again returns the existing row, does not create a duplicate
-    const found = await (post as any).related('image').firstOrCreate({ url: 'first.jpg' }) as Image
+    const found = await post.related('image' as any).firstOrCreate({ url: 'first.jpg' }) as Image
     assert.equal(found.id, created.id)
     assert.equal(await Image.query().count('* as total').then((r: any) => r[0].$extras.total), 1)
   })
@@ -179,14 +179,12 @@ test.group('MorphOne', (group) => {
     const post = await Post.create({ title: 'Hello' })
 
     // No existing row — creates
-    const image = await (post as any)
-      .related('image')
+    const image = await post.related('image' as any)
       .updateOrCreate({ imageableId: post.id }, { url: 'original.jpg' }) as Image
     assert.equal(image.url, 'original.jpg')
 
     // Existing row — updates
-    await (post as any)
-      .related('image')
+    await post.related('image' as any)
       .updateOrCreate({ imageableId: post.id }, { url: 'updated.jpg' })
 
     const refreshed = await Image.findOrFail(image.id)
