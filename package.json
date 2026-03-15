@@ -1,6 +1,6 @@
 {
   "name": "@holoyan/adonisjs-polymorphic",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Polymorphic relations (morphOne, morphMany, morphTo) for AdonisJS Lucid ORM",
   "type": "module",
   "main": "./build/src/index.js",
