@@ -1,8 +1,8 @@
 /**
  * MorphOne tests
  *
- * preload/related calls use `as any` because our dynamically-registered relations
- * are not in Lucid's static type system (ExtractModelRelations). Runtime works correctly.
+ * The relation name argument uses `as any` because our dynamically-registered relations
+ * are not in Lucid's static type system. Casting only the string keeps full IDE autocomplete on the query builder.
  */
 import { test } from '@japa/runner'
 import { setupDatabase, closeDatabase, schema } from './helpers/db.js'

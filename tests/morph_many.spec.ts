@@ -1,7 +1,7 @@
 /**
  * MorphMany tests
  *
- * preload/related calls use `as any` because our dynamically-registered relations
+ * The relation name argument uses `as any` because our dynamically-registered relations
  * are not in Lucid's static type system. Runtime works correctly.
  */
 import { test } from '@japa/runner'
