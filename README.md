@@ -149,8 +149,8 @@ export default class Video extends BaseModel {
 **Eager load (preload):**
 
 ```ts
-const post = await (Post.query() as any)
-  .preload('image')
+const post = await Post.query()
+  .preload('image' as any)
   .firstOrFail()
 
 console.log(post.image)         // Image | null
@@ -160,8 +160,8 @@ console.log(post.image?.url)    // 'photo.jpg'
 **Preload multiple parents at once:**
 
 ```ts
-const posts = await (Post.query() as any)
-  .preload('image') as Post[]
+const posts = await Post.query()
+  .preload('image' as any) as Post[]
 
 // One SQL query — no N+1
 // SELECT * FROM images WHERE imageable_type = 'posts' AND imageable_id IN (1, 2, 3)
@@ -170,8 +170,7 @@ const posts = await (Post.query() as any)
 **Ad-hoc query:**
 
 ```ts
-const image = await (post as any)
-  .related('image')
+const image = await post.related('image' as any)
   .query()
   .firstOrFail()
 ```
@@ -182,8 +181,7 @@ const image = await (post as any)
 
 ```ts
 // imageableType and imageableId are set automatically
-const image = await (post as any)
-  .related('image')
+const image = await post.related('image' as any)
   .create({ url: 'photo.jpg' })
 ```
 
@@ -193,22 +191,20 @@ const image = await (post as any)
 const image = new Image()
 image.url = 'photo.jpg'
 
-await (post as any).related('image').save(image)
+await post.related('image' as any).save(image)
 ```
 
 **Find or create:**
 
 ```ts
-const image = await (post as any)
-  .related('image')
+const image = await post.related('image' as any)
   .firstOrCreate({ url: 'photo.jpg' })
 ```
 
 **Update or create:**
 
 ```ts
-const image = await (post as any)
-  .related('image')
+const image = await post.related('image' as any)
   .updateOrCreate({ imageableId: post.id }, { url: 'new-photo.jpg' })
 ```
 
@@ -279,8 +275,8 @@ export default class Post extends BaseModel {
 **Eager load:**
 
 ```ts
-const post = await (Post.query() as any)
-  .preload('comments')
+const post = await Post.query()
+  .preload('comments' as any)
   .firstOrFail()
 
 console.log(post.comments)          // Comment[]
@@ -290,8 +286,8 @@ console.log(post.comments.length)   // 3
 **Comments are isolated by type — a post only gets its own comments, not a video's:**
 
 ```ts
-const post = await (Post.query() as any).preload('comments').firstOrFail()
-const video = await (Video.query() as any).preload('comments').firstOrFail()
+const post = await Post.query().preload('comments' as any).firstOrFail()
+const video = await Video.query().preload('comments' as any).firstOrFail()
 
 // Each only sees their own comments
 ```
@@ -299,8 +295,7 @@ const video = await (Video.query() as any).preload('comments').firstOrFail()
 **Ad-hoc query with additional constraints:**
 
 ```ts
-const recentComments = await (post as any)
-  .related('comments')
+const recentComments = await post.related('comments' as any)
   .query()
   .orderBy('created_at', 'desc')
   .limit(5)
@@ -311,8 +306,7 @@ const recentComments = await (post as any)
 **Create one:**
 
 ```ts
-const comment = await (post as any)
-  .related('comments')
+const comment = await post.related('comments' as any)
   .create({ body: 'Great post!' })
 
 console.log(comment.commentableType)  // 'posts'
@@ -322,7 +316,7 @@ console.log(comment.commentableId)    // post.id
 **Create many:**
 
 ```ts
-await (post as any).related('comments').createMany([
+await post.related('comments' as any).createMany([
   { body: 'First comment' },
   { body: 'Second comment' },
 ])
@@ -334,13 +328,13 @@ await (post as any).related('comments').createMany([
 const comment = new Comment()
 comment.body = 'Hello'
 
-await (post as any).related('comments').save(comment)
+await post.related('comments' as any).save(comment)
 ```
 
 **Save many:**
 
 ```ts
-await (post as any).related('comments').saveMany([comment1, comment2])
+await post.related('comments' as any).saveMany([comment1, comment2])
 ```
 
 ---
@@ -354,8 +348,8 @@ The child side of a polymorphic relation. A comment **belongs to** either a `Pos
 **Preload the parent:**
 
 ```ts
-const comment = await (Comment.query() as any)
-  .preload('commentable')
+const comment = await Comment.query()
+  .preload('commentable' as any)
   .firstOrFail()
 
 if (comment.commentable instanceof Post) {
@@ -369,15 +363,14 @@ if (comment.commentable instanceof Post) {
 
 ```ts
 // All comments in one query, parents resolved in two queries (posts + videos)
-const comments = await (Comment.query() as any)
-  .preload('commentable') as Comment[]
+const comments = await Comment.query()
+  .preload('commentable' as any) as Comment[]
 ```
 
 **Ad-hoc query:**
 
 ```ts
-const parent = await (comment as any)
-  .related('commentable')
+const parent = await comment.related('commentable' as any)
   .query()
   .firstOrFail()
 ```
@@ -388,7 +381,7 @@ const parent = await (comment as any)
 
 ```ts
 const post = await Post.findOrFail(1)
-await (comment as any).related('commentable').associate(post)
+await comment.related('commentable' as any).associate(post)
 
 // comment.commentableType is now 'posts'
 // comment.commentableId is now post.id
@@ -397,7 +390,7 @@ await (comment as any).related('commentable').associate(post)
 **Dissociate from parent:**
 
 ```ts
-await (comment as any).related('commentable').dissociate()
+await comment.related('commentable' as any).dissociate()
 
 // comment.commentableType is now null
 // comment.commentableId is now null
